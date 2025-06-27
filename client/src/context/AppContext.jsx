@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable no-unused-vars */
 import { createContext, useEffect, useState } from "react";
 import { jobsData } from "../assets/assets";
 
@@ -14,6 +14,8 @@ export const AppProvider = ({children }) => {
     const [isSearched, setIsSearched] = useState(false);
 
     const [jobs, setJobs] = useState([]);
+
+    const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
     
     // fn to fetch jobs
     const fetchJobs = async () => {
@@ -30,7 +32,9 @@ export const AppProvider = ({children }) => {
         isSearched,
         setIsSearched,
         jobs,
-        setJobs
+        setJobs,
+        showRecruiterLogin, 
+        setShowRecruiterLogin,
     };
     
     return (

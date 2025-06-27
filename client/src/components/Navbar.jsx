@@ -1,15 +1,18 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useContext } from 'react'
 import {assets} from '../assets/assets'
 import { useClerk, useUser, UserButton } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 
 const Navbar = () => {
     // console.log(assets.logo)
     const {openSignIn} = useClerk()
     const {user} = useUser()
     const navigate = useNavigate()
+
+    const { showRecruiterLogin, setShowRecruiterLogin } = useContext(AppContext);
 
   return (
     <div className='shadow py-4'>
@@ -25,7 +28,7 @@ const Navbar = () => {
                     </div>
                 ) : (
                     <div className='flex items-center gap-4'>
-                        <button className='text-gray-700 hover:text-blue-500 transition-colors'>
+                        <button className='text-gray-700 hover:text-blue-500 transition-colors' onClick={e => setShowRecruiterLogin(true)}>
                             Recruiter Login
                         </button>
                         <button onClick={e => openSignIn()} className='bg-blue-500 text-white px-4 py-2 rounded-md'>
