@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { createContext, useEffect, useState } from "react";
+ import { createContext, useEffect, useState } from "react";
 import { jobsData } from "../assets/assets";
 
 export const AppContext = createContext();
