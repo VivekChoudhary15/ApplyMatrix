@@ -2,7 +2,11 @@ import React from 'react'
 
 const VeiwApplications = () => {
   return (
-    <div>VeiwApplications</div>
+    <div>
+      <div>
+        table
+      </div>
+    </div>
   )
 }
 
