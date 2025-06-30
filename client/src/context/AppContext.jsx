@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { jobsData } from "../assets/assets";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AppContext = createContext();
 
 export const AppProvider = ({children }) => {
