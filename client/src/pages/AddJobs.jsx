@@ -1,9 +1,7 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useRef } from 'react'
+ import React, { useEffect, useRef } from 'react'
 import { useState } from 'react'
 import Quill from 'quill'
 import { JobCategories, JobLocations } from '../assets/assets'
-// import { Quill } from 'react-quill'
 
 const AddJobs = () => {
 
