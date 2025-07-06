@@ -3,3 +3,4 @@
 /client/src/assets
 /client/.env
 /server/node_modules
+/server/.env
