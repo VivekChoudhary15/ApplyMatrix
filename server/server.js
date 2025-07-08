@@ -9,6 +9,7 @@ import { clerkWebhook } from './controllers/webhooks.js'
 import userRoutes from './routes/user.routes.js'
 import companyRoutes from './routes/companyRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
+import jobRoutes from './routes/jobRoutes.js'
 
 dotenv.config()
 // Initialize express
@@ -22,7 +23,7 @@ await connectCloudinary()
 app.use(cors())
 app.use(express.json())
 
-app.use('/api/users', userRoutes)
+
 
 // Routes
 app.get('/', (req, res) => {
@@ -35,6 +36,9 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 
 app.post('/webhooks', clerkWebhook)
 app.use('/api/company', companyRoutes)
+app.use('/api/jobs', jobRoutes)
+app.use('/api/users', userRoutes)
+
 // Port
 const PORT = process.env.PORT || 5000
 
