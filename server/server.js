@@ -10,6 +10,7 @@ import userRoutes from './routes/user.routes.js'
 import companyRoutes from './routes/companyRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
 import jobRoutes from './routes/jobRoutes.js'
+import {clerkMiddleware} from '@clerk/express'
 
 dotenv.config()
 // Initialize express
@@ -22,8 +23,7 @@ await connectCloudinary()
 // Middleware
 app.use(cors())
 app.use(express.json())
-
-
+app.use(clerkMiddleware())
 
 // Routes
 app.get('/', (req, res) => {

@@ -1,26 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { assets } from '../assets/assets'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 
 const Dashboard = () => {
     const navigate = useNavigate();
+
+    const { companyData } = useContext(AppContext);
   return (
     <div className='min-h-screen'>
         {/* Navbar for Recruiter Panel  */}
         <div className='shadow py-4'>
             <div className='container mx-auto flex justify-between items-center'>
+
                 <img onClick={e => navigate('/')} className='max-sm:w-32 cursor-pointer' src={assets.logo} alt="" />
-                <div className='flex items-center gap-3'>
-                    <p className='max-sm:hidden'>Welcome, Recruiter</p>
-                    <div className='relative group'>
-                        <img className='w-8 border rounded-full' src={assets.company_icon} alt="" />
-                        <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12 '>
-                            <ul className='list-none bg-white shadow-lg rounded p-4 m-0'>
-                                <li className='py-2 px-1 cursor-pointer pr-10'>Logout</li>
-                            </ul>
+                { companyData && (
+                    <div className='flex items-center gap-3'>
+                        <p className='max-sm:hidden'>Welcome, {companyData.name}</p>
+                        <div className='relative group'>
+                            <img className='w-8 border rounded-full' src={companyData.image} alt="" />
+                            <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-12 '>
+                                <ul className='list-none bg-white shadow-lg rounded p-4 m-0'>
+                                    <li className='py-2 px-1 cursor-pointer pr-10'>Logout</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
 

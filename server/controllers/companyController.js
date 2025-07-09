@@ -34,6 +34,7 @@ export const registerCompany = async (req, res) => {
         });
 
         res.json({
+            success: true,
             message: 'Company registered successfully',
             company: {
                 _id: company._id,
@@ -56,7 +57,7 @@ export const loginCompany = async (req, res) => {
     try {
         const company = await Company.findOne({ email });
 
-        if (company && bcrypt.compareSync(password, company.password)) {
+        if (company && await bcrypt.compareSync(password, company.password)) {
             res.json({
                 success: true,
                 message: 'Login successful',

@@ -1,17 +1,22 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import {toast } from 'react-toastify'
 
 const RecruiterLogin = () => {
     const [state, setState] = useState('Login')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
+    
     const [isTextDataSubmitted, setIsTextDataSubmitted] = useState(false)
     const [logo, setLogo] = useState(null)
     const [logoPreview, setLogoPreview] = useState(null)
     const fileInputRef = useRef(null)
-    const { setShowRecruiterLogin } = useContext(AppContext)
+    const { setShowRecruiterLogin, backendUrl, setCompanyToken, setCompanyData } = useContext(AppContext)
+    const navigate = useNavigate()
 
     // Freeze scroll when popup is open
     useEffect(() => {
@@ -21,28 +26,53 @@ const RecruiterLogin = () => {
       }
     }, [])
 
-    const onSubmitHandler = (e) => {
+    const onSubmitHandler = async(e) => {
       e.preventDefault()
       if (state === 'Sign up' && !isTextDataSubmitted) {
         // Go to logo upload step
-        setIsTextDataSubmitted(true)
-      } else if (state === 'Sign up' && isTextDataSubmitted) {
-        // Final create account with logo
-        console.log('Creating account with:', { name, email, password, logo })
-        // Reset fields if needed
-        setName('')
-        setEmail('')
-        setPassword('')
-        setLogo(null)
-        setLogoPreview(null)
-        setIsTextDataSubmitted(false)
-        setState('Login')
-      } else {
-        // Handle login
-        console.log('Logging in with:', { email, password })
-        setEmail('')
-        setPassword('')
+        return setIsTextDataSubmitted(true)
       }
+
+      try {
+        if (state == "Login") {
+          const { data } = await axios.post(backendUrl + 'api/company/login', { email, password })
+          if (data.success) {
+            console.log(data)
+            setCompanyData(data.company)
+            setCompanyToken(data.token)
+            localStorage.setItem('companyToken', data.token)
+            setShowRecruiterLogin(false)
+            navigate('/dashboard')
+          }else{
+            toast.error(data.message)
+          }
+        }else{
+
+          const formData = new FormData()
+          formData.append('name', name)
+          formData.append('password', password)
+          formData.append('email', email)
+          formData.append('image', logo)
+
+          const {data} = await axios.post(backendUrl + 'api/company/register', formData)
+
+          if (data.success){
+            console.log(data)
+            setCompanyData(data.company)
+            setCompanyToken(data.token)
+            localStorage.setItem('companyToken', data.token)
+            setShowRecruiterLogin(false)
+            navigate('/dashboard')
+            
+          }else{
+            toast.error(data.message)
+          }
+        }
+        
+      }catch(error){
+        toast(error.message)
+      }
+      
     }
 
     const handleLogoChange = (e) => {
