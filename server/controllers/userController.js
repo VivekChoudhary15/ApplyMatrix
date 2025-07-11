@@ -18,7 +18,7 @@ export const getUserData = async (req, res) => {
       })
     }
 
-    res,json({
+    res.json({
       success: true,
       message: 'User data fetched successfully',
       user
@@ -143,17 +143,36 @@ export const updateUserResume = async (req, res) => {
   }
 }
 
-// Create or update user
+// Create or update user (fallback endpoint)
 export const createUser = async (req, res) => {
   try {
       const { _id, name, email, image, resume } = req.body;
+      
+      // Check if user already exists
       let user = await User.findById(_id);
-      if (!user) {
-          user = await User.create({ _id, name, email, image, resume });
+      if (user) {
+          return res.json({ 
+              success: true, 
+              message: 'User already exists',
+              user 
+          });
       }
-      res.status(200).json({ success: true, user });
+      
+      // Create new user
+      user = await User.create({ _id, name, email, image, resume: resume || '' });
+      
+      res.json({ 
+          success: true, 
+          message: 'User created successfully',
+          user 
+      });
   } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      res.json({ 
+          success: false, 
+          message: error.message 
+      });
   }
 };
+
+
 

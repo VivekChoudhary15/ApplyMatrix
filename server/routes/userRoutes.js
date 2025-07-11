@@ -1,20 +1,22 @@
 import express from 'express';
 import { applyForJob, getUserAppliedJobs, getUserData, updateUserResume, createUser } from '../controllers/userController.js';
 import upload from '../config/multer.js';
+import { protectUser } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/', createUser);
+// Create user (fallback endpoint - no auth required)
+router.post('/create-user', createUser);
 
 // Get user data
-router.get('/user', getUserData)
+router.get('/user', protectUser, getUserData)
 
 // Apply for a job
-router.post('/apply', applyForJob)
+router.post('/apply', protectUser, applyForJob)
 
 // Get applied jobs data
-router.get('/applications', getUserAppliedJobs)
+router.get('/applications', protectUser, getUserAppliedJobs)
 
-router.post('/update-resume', upload.single('resume'), updateUserResume)
+router.post('/update-resume', protectUser, upload.single('resume'), updateUserResume)
 
 export default router;

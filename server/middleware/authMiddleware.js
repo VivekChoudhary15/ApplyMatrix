@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import Company from '../models/Company.js'
+import { requireAuth } from '@clerk/express'
 
 export const protectCompany = async (req, res, next) => {
     const token = req.headers.token
@@ -20,3 +21,6 @@ export const protectCompany = async (req, res, next) => {
         res.json({ message: error.message, success: false });
     }
 }
+
+// Clerk middleware for user authentication
+export const protectUser = requireAuth()

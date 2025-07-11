@@ -13,27 +13,29 @@ const Navbar = () => {
     const {user} = useUser()
     const navigate = useNavigate()
 
+    const { backendUrl } = useContext(AppContext);
+
     const { showRecruiterLogin, setShowRecruiterLogin } = useContext(AppContext);
 
     useEffect(() => {
-    const createUserInBackend = async () => {
-        if (!user) return;
+        const createUserInBackend = async () => {
+            if (!user) return;
 
-        try {
-            await axios.post("http://localhost:5000/api/users/", {
-                _id: user.id,
-                name: `${user.firstName} ${user.lastName}`,
-                email: user.emailAddresses[0]?.emailAddress,
-                image: user.imageUrl,
-                resume: ""
-            });
-        } catch (err) {
-            console.error("Failed to send user data to backend:", err);
-        }
-    };
+            try {
+                await axios.post(`${backendUrl}/api/users/create-user`, {
+                    _id: user.id,
+                    name: `${user.firstName} ${user.lastName}`,
+                    email: user.emailAddresses[0]?.emailAddress,
+                    image: user.imageUrl,
+                    resume: ""
+                });
+            } catch (err) {
+                console.error("Failed to send user data to backend:", err);
+            }
+        };
 
-    createUserInBackend();
-}, [user]);
+        createUserInBackend();
+    }, [user, backendUrl]);
 
 
   return (
