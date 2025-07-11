@@ -6,7 +6,7 @@ import connectDB from './config/db.js'
 import './config/instrument.js' // Sentry initialization
 import * as Sentry from '@sentry/node'
 import { clerkWebhook } from './controllers/webhooks.js'
-import userRoutes from './routes/user.routes.js'
+import userRoutes from './routes/userRoutes.js'
 import companyRoutes from './routes/companyRoutes.js'
 import connectCloudinary from './config/cloudinary.js'
 import jobRoutes from './routes/jobRoutes.js'

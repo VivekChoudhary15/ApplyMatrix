@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useContext } from 'react'
-import { manageJobsData } from '../assets/assets'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -11,7 +10,7 @@ const ManageJobs = () => {
 
   const navigate = useNavigate()
 
-  const [jobs, setJobs] = React.useState(false);
+  const [jobs, setJobs] = React.useState([]);
 
   const { backendUrl, companyToken } = useContext(AppContext);
 
@@ -34,11 +33,32 @@ const ManageJobs = () => {
     }
   }
 
+  // Fn to change job visibility
+  const changeJobVisibility = async (id) => {
+    try {
+      const { data } = await axios.post(backendUrl + 'api/company/change-visibility', {
+        id
+      }, {
+        headers: {
+          token: companyToken
+        }
+      });
+      if (data.success) {
+        toast.success(data.message);
+        fetchCompanyJobs();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
   useEffect(() => {
     if (companyToken) {
       fetchCompanyJobs();
     }
-  }, [companyToken]);
+  }, [companyToken, fetchCompanyJobs]);
 
   return (
     <div className="p-4 relative min-h-[70vh]">
@@ -56,7 +76,7 @@ const ManageJobs = () => {
               </tr>
             </thead>
             <tbody>
-              {manageJobsData.map((job, index) => (
+              {jobs.map((job, index) => (
                 <tr
                   key={index}
                   className="border-b last:border-b-0 hover:bg-gray-50 transition"
@@ -68,6 +88,7 @@ const ManageJobs = () => {
                   <td className="py-4 px-8 text-center">{job.applicants}</td>
                   <td className="py-4 px-8">
                     <input 
+                      onChange={() => changeJobVisibility(job._id)}
                       type="checkbox"
                       checked={job.visible}
                       readOnly

@@ -1,8 +1,10 @@
 import express from 'express';
-import { applyForJob, getUserAppliedJobs, getUserData, updateUserResume } from '../controllers/userController.js';
+import { applyForJob, getUserAppliedJobs, getUserData, updateUserResume, createUser } from '../controllers/userController.js';
 import upload from '../config/multer.js';
 
 const router = express.Router();
+
+router.post('/', createUser);
 
 // Get user data
 router.get('/user', getUserData)

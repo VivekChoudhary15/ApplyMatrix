@@ -20,7 +20,7 @@ const Navbar = () => {
         if (!user) return;
 
         try {
-            await axios.post("http://localhost:5000/api/users", {
+            await axios.post("http://localhost:5000/api/users/", {
                 _id: user.id,
                 name: `${user.firstName} ${user.lastName}`,
                 email: user.emailAddresses[0]?.emailAddress,

@@ -10,7 +10,7 @@ import ManageJobs from './pages/ManageJobs'
 import AddJobs from './pages/AddJobs'
 import ViewApplications from './pages/VeiwApplications'
 import 'quill/dist/quill.snow.css'
- import { ToastContainer, toast } from 'react-toastify';
+ import { ToastContainer } from 'react-toastify';
 
 const App = () => {
 

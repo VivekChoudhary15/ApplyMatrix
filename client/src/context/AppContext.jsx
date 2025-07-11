@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { jobsData } from "../assets/assets";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth, useUser } from "@clerk/clerk-react";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const AppContext = createContext();
@@ -9,6 +9,9 @@ export const AppContext = createContext();
 export const AppProvider = ({children }) => {
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+    const {user} = useUser()
+    const {getToken} = useAuth()
 
     const [searchFilter, setSearchFilter] = useState({
         title: '',
@@ -25,10 +28,21 @@ export const AppProvider = ({children }) => {
 
     const [companyData, setCompanyData] = useState(null)
 
-    
+    const [userData, setUserData] = useState(null);
+    const [userApplications, setUserApplications] = useState([]);
+
     // fn to fetch jobs
     const fetchJobs = async () => {
-        setJobs(jobsData); // Clear previous jobs
+        try{
+            const { data } = await axios.get(backendUrl + 'api/jobs', {headers:{token: companyToken}})
+            if (data.success) {
+                setJobs(data.jobs);
+            } else {
+                toast.error(data.message);
+            }
+        }catch(error){
+            toast.error(error.message);
+        }
     };
 
     // fetch company data
@@ -46,6 +60,24 @@ export const AppProvider = ({children }) => {
         }
     };
 
+    // function to fetch user data
+    const fetchUserData = async () => {
+        try {
+            const token = await getToken();
+
+            const { data } = await axios.get(backendUrl + 'api/users/user', 
+                {headers:{Authorization: `Bearer ${token}`}})
+            
+            if (data.success) {
+                setUserData(data.user);
+            } else {
+                // toast.error(data.message);
+            }
+        } catch(error){
+            // toast.error(error.message);
+        }
+    };
+
     useEffect(() => {
         // Fetch jobs when the component mounts
         fetchJobs();
@@ -54,14 +86,21 @@ export const AppProvider = ({children }) => {
         if (storedCompanyToken) {
             setCompanyToken(storedCompanyToken);
         }
-    }, []);
+    }, [fetchJobs]);
 
     useEffect(() => {
         // Fetch company data when companyToken changes
         if (companyToken) {
             fetchCompanyData();
         }
-    }, [companyToken]);
+    }, [companyToken, fetchCompanyData]);
+
+    useEffect(() => {
+        // Fetch user data when user changes
+        if (user) {
+            fetchUserData();
+        }
+    }, [user, fetchUserData]);
 
     const value = {
         searchFilter,

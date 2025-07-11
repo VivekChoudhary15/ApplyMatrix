@@ -1,5 +1,4 @@
 import React from 'react'
-import {assets} from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 
 const JobCard = ({job}) => {
@@ -7,7 +6,7 @@ const JobCard = ({job}) => {
   return (
     <div className='border p-6 shadow rounded'>
         <div className='flex items-center gap-4 mb-4 justify-between'>
-            <img className='h-8' src={assets.company_icon} alt="" />
+            <img className='h-8' src={job.companyId.image} alt="" />
         </div>
         <h4 className='text-xl font-semibold mt-2'>
             {job.title}

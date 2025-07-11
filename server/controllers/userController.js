@@ -143,3 +143,17 @@ export const updateUserResume = async (req, res) => {
   }
 }
 
+// Create or update user
+export const createUser = async (req, res) => {
+  try {
+      const { _id, name, email, image, resume } = req.body;
+      let user = await User.findById(_id);
+      if (!user) {
+          user = await User.create({ _id, name, email, image, resume });
+      }
+      res.status(200).json({ success: true, user });
+  } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+  }
+};
+
