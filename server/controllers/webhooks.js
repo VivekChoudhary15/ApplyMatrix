@@ -21,40 +21,37 @@ export const clerkWebhook = async (req, res) => {
             case 'user.created':
                 const userData = {
                     _id: data.id,
-                    email: data.emailAddresses[0].emailAddress,
-                    name: data.firstName + ' ' + data.lastName,
+                    email: data.email_addresses[0].email_address,
+                    name: `${data.first_name} ${data.last_name}`,
                     image: data.image_url || '',
                     resume: ''
                 }
                 await User.create(userData)
-                res.json({})
                 break
             
             case 'user.updated':
                 const updatedUserData = {
-                    email: data.emailAddresses[0].emailAddress,
-                    name: data.firstName + ' ' + data.lastName,
+                    email: data.email_addresses[0].email_address,
+                    name: `${data.first_name} ${data.last_name}`,
                     image: data.image_url || '',
                 }
                 await User.findByIdAndUpdate(data.id, updatedUserData, { new: true })
-                res.json({})
                 break
                 
             case 'user.deleted':
-                const deletedUserId = data.id
-                await User.findByIdAndDelete(deletedUserId)
-                res.json({})
+                // Make sure to handle the case where data.id might be undefined
+                if (data.id) {
+                    await User.findByIdAndDelete(data.id)
+                }
                 break
 
             default:
                 console.log(`Unhandled event type: ${type}`)
-                break;
         }
         
-        res.status(200).send('Webhook received and processed')
+        res.status(200).json({ success: true, message: 'Webhook received' });
     } catch (error) {
-        console.error('Error processing webhook:', error)
-        // res.status(500).send('Internal Server Error')
-        res.json({success: false, message: 'Error processing webhook', error: error.message})
+        console.error('Error processing Clerk webhook:', error);
+        res.status(400).json({ success: false, message: error.message });
     }
 }

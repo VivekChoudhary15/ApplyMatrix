@@ -51,7 +51,7 @@ export const AppProvider = ({children }) => {
             const { data } = await axios.get(backendUrl + 'api/company/company', {headers:{token: companyToken}})
             if (data.success) {
                 setCompanyData(data.company);
-                console.log(data)
+                // console.log(data)
             } else {
                 toast.error(data.message);
             }
