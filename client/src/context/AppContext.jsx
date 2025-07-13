@@ -88,11 +88,11 @@ export const AppProvider = ({children }) => {
             
             if (data.success) {
                 setUserApplications(data.applications);
-            } else {
-                toast.error(data.message);
+            } else  {
+                // toast.error(data.message);
             }
         } catch(error){
-            toast.error(error.message);
+            // toast.error(error.message);
         }
     };  
 
