@@ -3,7 +3,7 @@ import cors from 'cors'
 import 'dotenv/config'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
-import './config/instrument.js' // Sentry initialization
+import './config/instrument.js'
 import * as Sentry from '@sentry/node'
 import { clerkWebhook } from './controllers/webhooks.js'
 import userRoutes from './routes/userRoutes.js'
@@ -23,41 +23,6 @@ const app = express()
 await connectDB()
 await connectCloudinary()
 
-// Webhook route for Clerk
-// This must be before app.use(express.json()) to receive the raw body
-// app.post('/webhooks', bodyParser.raw({ type: 'application/json' }), 
-// async function (req, res) {
-//   try{
-//     const payloadString = req.body.toString()
-//     const svixHeaders = req.headers
-
-//     const webhook = new Webhook(process.env.CLERK_WEBHOOK_SECRET)
-
-//     const evt = webhook.verify(payloadString, svixHeaders)
-
-//     const {id, ...attributes} = evt.data
-
-//     const eventType = evt.type
-
-//     if (eventType === 'user.created') {
-//       const userData = {
-//         _id: id,
-//         email: attributes.email_addresses[0].email_address,
-//         name: `${attributes.first_name} ${attributes.last_name}`,
-//         image: attributes.image_url || '',
-//         resume: ''
-//       }
-//       await User.create(userData)
-//       console.log('User created:', userData)
-//     }
-//     res.status(200).json({ success: true, message: 'Webhook received' });
-  
-//   }catch (error) {
-//     console.error('Error processing Clerk webhook:', error);
-//     res.json({ success: false, message: error.message });
-//   }
-// }
-// )
 app.post('/webhooks', bodyParser.raw({ type: 'application/json' }), clerkWebhook)
 // Middleware
 app.use(cors())

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import {assets, jobsData} from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import Loading from '../components/Loading'
@@ -11,15 +11,19 @@ import kconvert from 'k-convert';
 import moment from 'moment';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useAuth } from '@clerk/clerk-react';
 
 const ApplyJob = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [jobsData, setJobsData] = useState(null);
-  const { jobs, backendUrl } = useContext(AppContext);
+  const { jobs, backendUrl, userData, userApplications } = useContext(AppContext);
+
+  const {getToken} = useAuth();
 
   const fetchJobs = async () => {
     try{
-      const { data } = await axios.get(backendUrl + `/api/jobs/${id}`);
+      const { data } = await axios.get(backendUrl + `api/jobs/${id}`);
       if (data.success) {
         setJobsData(data.job);
       } else {
@@ -29,6 +33,38 @@ const ApplyJob = () => {
       toast.error(error.message);
     }    
   };
+
+  const applyHandler = async () => {
+    try{
+      if(!userData) {
+        toast.error('Please login to apply for the job');
+        return;
+      }
+      if (!userData.resume) {
+        navigate('/applications');
+        toast.error('Please upload your resume before applying');
+        return;
+      }
+
+      const token = await getToken();
+      const { data } = await axios.post(backendUrl + 'api/jobs/apply', {
+        jobId: jobsData._id,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (data.success) {
+        toast.success(data.message);
+        navigate('/applications');
+      } else {
+        toast.error(data.message);
+      }
+    }catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   React.useEffect(() => {
       fetchJobs();
@@ -66,7 +102,7 @@ const ApplyJob = () => {
             </div>
 
             <div className='flex flex-col items-center gap-4 justify-center text-end md:text-start'>
-              <button className='bg-blue-500 text-white px-4 py-2 rounded-lg'>Apply Now</button>
+              <button onClick={applyHandler} className='bg-blue-500 text-white px-4 py-2 rounded-lg'>Apply Now</button>
               <p className='mt-1 text-gray-500'>Posted {moment(jobsData.date).fromNow()}</p>
             </div>
           </div>
@@ -76,11 +112,11 @@ const ApplyJob = () => {
           <div className='w-full lg:w-3/3 '>
             <h2 className='font-bold text-2xl mb-4 '>Job Description</h2>
             <div className='rich-text' dangerouslySetInnerHTML={{ __html: jobsData.description }}></div>
-            <button className='bg-blue-500 text-white px-4 py-2 rounded-lg mt-10'>Apply Now</button>
+            <button onClick={applyHandler} className='bg-blue-500 text-white px-4 py-2 rounded-lg mt-10'>Apply Now</button>
             </div>
             <div>
               {/* right section  */}
-              <div className='w-full lg:w-2/3 mt-8 lg-mt-0 lg:ml-8 space-y-6'>
+              <div className='w-full lg:w-3/3 mt-8 lg-mt-0 lg:ml-8 space-y-6'>
                 <h2>More Jobs from {jobsData.companyId.name}</h2>
                 {jobs.filter(job => job._id !==jobsData && job.companyId._id === jobsData.companyId._id).filter( job => true).slice(0,4).map((job, index) => <JobCard key={index} job={job} />)}
               </div>

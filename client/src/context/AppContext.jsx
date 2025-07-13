@@ -78,6 +78,24 @@ export const AppProvider = ({children }) => {
         }
     };
 
+    // Function to fetch user applications
+    const fetchUserApplications = async () => {
+        try {
+            const token = await getToken();
+
+            const { data } = await axios.get(backendUrl + 'api/users/applications', 
+                {headers:{Authorization: `Bearer ${token}`}})
+            
+            if (data.success) {
+                setUserApplications(data.applications);
+            } else {
+                toast.error(data.message);
+            }
+        } catch(error){
+            toast.error(error.message);
+        }
+    };  
+
     useEffect(() => {
         // Fetch jobs when the component mounts
         fetchJobs();
@@ -102,6 +120,13 @@ export const AppProvider = ({children }) => {
         }
     }, [user, fetchUserData]);
 
+    useEffect(() => {
+        // Fetch user applications when userData changes
+        if (user && userData) {
+            fetchUserApplications();
+        }
+    }, [user, fetchUserApplications]);
+
     const value = {
         searchFilter,
         setSearchFilter,
@@ -116,6 +141,10 @@ export const AppProvider = ({children }) => {
         companyData,
         setCompanyData,
         backendUrl,
+        userData,
+        userApplications,
+        setUserData,
+        setUserApplications,
     };
     
     return (
