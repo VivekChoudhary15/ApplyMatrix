@@ -57,11 +57,9 @@ Before running this application, make sure you have:
 
 ### Option 1: Live Demo (Recommended)
 
-**Frontend (Client):** [https://your-frontend-app.vercel.app](https://your-frontend-app.vercel.app)
+**Frontend (Client):** [https://applymatrix-frontend.onrender.com/](https://applymatrix-frontend.onrender.com/)
 
-**Backend (API):** [https://your-backend-app.render.com](https://your-backend-app.render.com)
-
-> **Note:** The frontend is deployed on Vercel and the backend API is deployed on Render. Both are connected and fully functional.
+**Backend (API):** [https://applymatrix-backend.onrender.com/](https://applymatrix-backend.onrender.com/)
 
 ### Option 2: Local Development
 
@@ -208,13 +206,12 @@ apply-matrix/
 4. Set environment variables in Render dashboard
 5. Deploy as a Web Service
 
-### Frontend Deployment (Vercel)
+### Frontend Deployment (Render)
 
-1. Create account on [Vercel](https://vercel.com)
-2. Connect your GitHub repository
-3. Select the `client` directory for deployment
-4. Set environment variables in Vercel dashboard
-5. Update `REACT_APP_BACKEND_URL` to your deployed backend URL
+1. Connect your GitHub repository
+2. Select the `client` directory for deployment
+3. Set environment variables in Vercel dashboard
+4. Update `REACT_APP_BACKEND_URL` to your deployed backend URL
 
 ## 📝 Environment Variables
 
@@ -246,10 +243,6 @@ REACT_APP_CLERK_PUBLISHABLE_KEY= # Clerk publishable key
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - [Clerk](https://clerk.com) for authentication
@@ -257,10 +250,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [MongoDB Atlas](https://mongodb.com) for database hosting
 - [Tailwind CSS](https://tailwindcss.com) for styling
 
-## 📞 Support
-
-For support, email your-email@example.com or create an issue in the GitHub repository.
-
----
-
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by Vivek**
